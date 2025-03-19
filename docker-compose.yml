@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+  db:
+    image: postgres:15
+    container_name: db
+    environment:
+      POSTGRES_DB: ordenes_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./consumer/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d ordenes_db"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+  api:
+    build: ./api
+    container_name: api
+    ports:
+      - "8000:8000"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: always
+
+  producer:
+    build: ./producer
+    container_name: producer
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: always
+
+  consumer:
+    build: ./consumer
+    container_name: consumer
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    restart: always
