@@ -56,3 +56,14 @@ services:
       db:
         condition: service_healthy
     restart: always
+
+  frontend:
+    build: ./front
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+      - producer
+      - consumer
+    restart: always

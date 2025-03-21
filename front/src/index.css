@@ -1,44 +1,144 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f3f4f6;
   margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  overflow-y: hidden; /* Evitar scroll general */
+}
+
+.app-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
-h1, h2 {
-  text-align: center;
-}
-
-input, button {
-  display: block;
+.form-and-list-container {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  max-width: 800px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
-button {
+.main-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Contenedor interno */
+.inner-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Formulario */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.input-field {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.submit-button {
+  padding: 10px;
   background-color: #007bff;
   color: white;
   border: none;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-button:hover {
+.submit-button:hover {
   background-color: #0056b3;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
+/* Lista */
+.list-container {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
 }
 
-li {
-  background: white;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+.list-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.scrollable-list {
+  max-height: 150px; /* Limitar la altura */
+  overflow-y: auto; /* Scroll solo para la lista */
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}
+
+.purchase-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.purchase-item {
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.purchase-item:last-child {
+  border-bottom: none;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}
+
+.empty-message {
+  color: #999;
+  font-size: 14px;
+  text-align: center;
+}
+
+.purchase-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.purchase-table th,
+.purchase-table td {
+  border: 1px solid #ddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.purchase-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.purchase-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.purchase-table tr:hover {
+  background-color: #f1f1f1;
 }

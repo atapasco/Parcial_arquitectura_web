@@ -12,22 +12,29 @@ class Orden(BaseModel):
     cantidad: int
 
 def publicar_evento(orden: Orden):
-    """Publica la orden en RabbitMQ"""
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
-    channel = connection.channel()
-    channel.queue_declare(queue='ordenes')
-    
-    mensaje = orden.model_dump_json()
-    channel.basic_publish(exchange='', routing_key='ordenes', body=mensaje)
-    
-    connection.close()
+    try:
+        """Publica la orden en RabbitMQ"""
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq',
+                heartbeat=60,  # Configura el heartbeat aquí
+                blocked_connection_timeout=300 ))
+        channel = connection.channel()
+        channel.queue_declare(queue='ordenes', durable=True)
+        
+        mensaje = orden.model_dump_json()
+        channel.basic_publish(exchange='', routing_key='ordenes', body=mensaje)
+        print(f"📤 Orden publicada en RabbitMQ: {orden}")  # Log detallado
+        connection.close()
+    except Exception as e:
+        print(f"❌ Error al enviar la orden: {e}")
     
 def publicar_evento_consulta():
     """Publica un mensaje en RabbitMQ para solicitar las órdenes."""
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq',
+            heartbeat=60,  # Configura el heartbeat aquí
+            blocked_connection_timeout=300 ))
     channel = connection.channel()
     
-    channel.queue_declare(queue="consulta_ordenes")
+    channel.queue_declare(queue="consulta_ordenes", durable=True)
     channel.basic_publish(exchange="", routing_key="consulta_ordenes", body="Solicitar órdenes")
     
     print("📤 Evento de consulta de órdenes enviado")
@@ -35,7 +42,9 @@ def publicar_evento_consulta():
 
 def esperar_respuesta(timeout=5):
     """Espera la respuesta del consumidor con las órdenes almacenadas."""
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq",
+            heartbeat=60,  # Configura el heartbeat aquí
+            blocked_connection_timeout=300 ))
     channel = connection.channel()
     channel.queue_declare(queue="ordenes_respuesta")
 

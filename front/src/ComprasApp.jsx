@@ -57,55 +57,71 @@ export default function ComprasApp() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold mb-6">Sistema de Compras</h1>
-
-      {/* Contenedor principal */}
-      <div className="flex flex-col md:flex-row gap-8 items-start w-full max-w-4xl">
-        
-        {/* Formulario */}
-        <div className="bg-white p-6 rounded-lg shadow-md w-full md:w-1/2">
-          <input
-            type="text"
-            placeholder="Producto"
-            value={producto}
-            onChange={(e) => setProducto(e.target.value)}
-            className="w-full p-2 border rounded mb-2"
-          />
-          <input
-            type="number"
-            placeholder="Cantidad"
-            value={cantidad}
-            onChange={(e) => setCantidad(e.target.value)}
-            className="w-full p-2 border rounded mb-2"
-          />
-          <button
-            onClick={enviarOrden}
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-          >
-            Comprar
-          </button>
-        </div>
-
-        {/* Lista de compras */}
-        <div className="w-full md:w-1/2">
-          <h2 className="text-xl font-semibold mb-3">Compras registradas</h2>
-          <div className="bg-white p-6 rounded-lg shadow-md max-h-80 overflow-y-auto">
-            {error && <p className="text-red-500">{error}</p>}
-            {compras.length === 0 ? (
-              <p className="text-gray-500">No hay compras registradas.</p>
-            ) : (
-              <ul>
-                {compras.map((compra) => (
-                  <li key={compra.id} className="border-b p-2">
-                    {compra.producto} - {compra.cantidad}
-                  </li>
-                ))}
-              </ul>
-            )}
+    <div className="app-container">
+      <div className="form-and-list-container">
+        <h1 className="main-title">Sistema de Compras</h1>
+  
+        {/* Contenedor del formulario y la tabla */}
+        <div className="inner-container">
+          {/* Formulario */}
+          <div className="form-container">
+            <label htmlFor="producto" className="form-label">
+              Producto
+            </label>
+            <input
+              id="producto"
+              type="text"
+              placeholder="Nombre del producto"
+              value={producto}
+              onChange={(e) => setProducto(e.target.value)}
+              className="input-field"
+            />
+  
+            <label htmlFor="cantidad" className="form-label">
+              Cantidad
+            </label>
+            <input
+              id="cantidad"
+              type="number"
+              placeholder="Cantidad"
+              value={cantidad}
+              onChange={(e) => setCantidad(e.target.value)}
+              className="input-field"
+            />
+  
+            <button onClick={enviarOrden} className="submit-button">
+              Comprar
+            </button>
+          </div>
+  
+          {/* Lista de compras */}
+          <div className="list-container">
+            <h2 className="list-title">Compras registradas</h2>
+            <div className="scrollable-list">
+              {error && <p className="error-message">{error}</p>}
+              {compras.length === 0 ? (
+                <p className="empty-message">No hay compras registradas.</p>
+              ) : (
+                <table className="purchase-table">
+                  <thead>
+                    <tr>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {compras.map((compra) => (
+                      <tr key={compra.id}>
+                        <td>{compra.producto}</td>
+                        <td>{compra.cantidad}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   );
