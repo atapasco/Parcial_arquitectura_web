@@ -28,8 +28,12 @@ def guardar_orden(orden):
 
 # Función para procesar eventos desde RabbitMQ
 def procesar_orden(ch, method, properties, body):
-    orden = json.loads(body)
-    guardar_orden(orden)
+    try:
+        orden = json.loads(body)
+        guardar_orden(orden)
+        ch.basic_ack(delivery_tag=method.delivery_tag)  # Confirmar procesamiento
+    except Exception as e:
+        print("❌ Error al procesar la orden:", e)
 
 # Consumir mensajes de RabbitMQ
 def consumir_ordenes():
@@ -37,7 +41,7 @@ def consumir_ordenes():
     channel = connection.channel()
     channel.queue_declare(queue='ordenes')
 
-    channel.basic_consume(queue='ordenes', on_message_callback=procesar_orden, auto_ack=True)
+    channel.basic_consume(queue='ordenes', on_message_callback=procesar_orden, auto_ack=False)
     print("🚀 Esperando órdenes y guardándolas en la BD...")
     channel.start_consuming()
 
